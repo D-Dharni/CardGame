@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class Player {
     // Instance Variables
     private String name;
-    private ArrayList<Card> hand;
+    private ArrayList<Card> hand = new ArrayList<Card>();
     private int points;
 
 
@@ -42,6 +42,9 @@ public class Player {
         this.hand.add(card);
     }
 
+    public void resetHand() {
+        hand.clear();
+    }
     // toString Method
     public String toString() {
         return this.name + " has " + this.points + "\n" + this.name + "'s cards: " + this.hand;

@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class Deck {
     // Instance Variables
-    private ArrayList<Card> deck;
+    private ArrayList<Card> deck = new ArrayList<Card>();
     private int cardsLeft;
 
     // Constructor

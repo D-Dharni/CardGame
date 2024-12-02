@@ -1,42 +1,149 @@
 import java.util.Scanner;
-
+import java.util.ArrayList;
 
 public class Game {
-    private Player player1;
-    private Player player2;
-    private Deck deck;
+    public static Player player1;
+    public static Player dealer;
+    public static Deck deck;
+
     public Game() {
         // Setting player 1
         Scanner input = new Scanner(System.in);
-        System.out.println("What is the first player's name?");
+        System.out.println("What's your name?");
         String namePlayer1 = input.nextLine();
-        // Setting player 2
-        System.out.println("What is the second player's name?");
-        String namePlayer2 = input.nextLine();
         // Initialize players
         this.player1 = new Player(namePlayer1);
-        this.player2 = new Player(namePlayer2);
+        this.dealer = new Player("Dealer");
         // Make arrays for deck
         String[] suit = {"Hearts", "Diamonds", "Clubs", "Spades"};
         String[] rank = {"Ace", "2", "3", "4", "5", "6", "7", "8", "9", "Jack", "Queen", "King"};
         int[] points = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10};
         // Initialize deck
-        this.deck = new Deck(rank, suit, points);
+        deck = new Deck(rank, suit, points);
     }
     // Instructions
-    public void printInstructions() {
+    public static void printInstructions() {
         System.out.println("Blackjack is a card game where the goal is to have a hand value closer to 21 than the " +
-                "dealer without exceeding 21. Players are dealt two cards and can \"hit\" to take additional " +
-                "cards or \"stand\" to keep their current total, aiming to maximize their score without going over. " +
-                "Cards 2-10 are worth their face value, face cards count as 10, and Aces count as 1.");
+                "dealer without exceeding 21.\nPlayers are dealt two cards and can \"hit\" to take additional " +
+                "cards or \"stand\" to keep their current total,\naiming to maximize their score without going over. " +
+                "Cards 2-10 are worth their face value, face cards count as 10,\nand Aces count as 1.\n\n");
     }
     // Play Game Function
-    public void playGame() {
+    public static void playGame() {
+        // Variables for sums
+        int playerSum = 0;
+        int dealerSum = 0;
+        Scanner input = new Scanner(System.in);
+        String decision = "";
+        boolean continueToDealer = true;
+        boolean continueGame = true;
+        int sumDealer = 0;
+        int sum = 0;
 
+
+        while (continueGame)
+        {
+            // reset variables
+            player1.resetHand();
+            dealer.resetHand();
+            continueToDealer = true;
+            continueGame = true;
+            // player's turn
+            while (playerSum < 22) {
+                System.out.println(player1.getName() + " do you want to hit (h) or stay (s) if you want to quit" +
+                        " playing say exit (e)");
+                decision = input.nextLine();
+                // if they hit
+                if (decision.equals("h")) {
+                    // add a card to their thing
+                    player1.addCard(deck.deal());
+                    // print out hand for them
+                    sum = sum(player1.getHand());
+                    System.out.println("Here is the sum of your hand: \n" + sum + "\n");
+
+                    // check if bust or blackjack
+                    if (sum == 21) {
+                        System.out.println("Blackjack! You won");
+                        continueGame = false;
+                        break;
+                    }
+                    else if (sum > 21) {
+                        System.out.println("You busted");
+                        continueToDealer = false;
+                        break;
+                    }
+                }
+                // if they stay change the turn
+                else if (decision.equals("s")) {
+                    break;
+                }
+                else {
+                    continueToDealer = false;
+                    continueGame = false;
+                    break;
+                }
+            }
+
+            // print out change in turn
+            if (continueGame == true && continueToDealer == true) {
+                System.out.println("Dealer's turn");
+            }
+            // dealers hand
+            if (continueToDealer) {
+                while(sum(dealer.getHand()) < 18) {
+                    dealer.addCard(deck.deal());
+                    sumDealer = sum(dealer.getHand());
+                    System.out.println("Dealer's sum: " + sumDealer + "\n");
+                    // check if blackjack
+                    if (sumDealer == 21) {
+                        System.out.println("Blackjack! You lost");
+                        break;
+                    }
+                    // if over 21
+                    if (sumDealer > 21 ) {
+                        System.out.println("Dealer busted. You won!");
+                        break;
+                    }
+                }
+            }
+
+            if (continueGame) {
+                // find out who won
+                if (sum > sumDealer && sum < 22) {
+                    System.out.println("You won!");
+                }
+                else if (sum < sumDealer && sumDealer < 22) {
+                    System.out.println("You lost!");
+                }
+                else if (sum == sumDealer){
+                    System.out.println("You tied!");
+                }
+            }
+
+        }
+    }
+
+    public static int sum (ArrayList<Card> arr) {
+        // variable to return and for getting array of points
+        int sum = 0;
+        int[] arrOfValues = new int[arr.size()];
+        // add points to array of points
+        for (int i = 0; i < arr.size(); i++) {
+            arrOfValues[i] = arr.get(i).getValue();
+        }
+        // add points to the sum
+        for (int number: arrOfValues) {
+            sum += number;
+        }
+        // return the value
+        return sum;
     }
 
     // Main Function
     public static void main(String[] args) {
+        printInstructions();
+        Game play = new Game();
+        playGame();
 
     }
 }
