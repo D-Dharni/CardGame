@@ -5,6 +5,9 @@ public class Game {
     public static Player player1;
     public static Player dealer;
     public static Deck deck;
+    public static String[] suit = {"Hearts", "Diamonds", "Clubs", "Spades"};
+    public static String[] rank = {"Ace", "2", "3", "4", "5", "6", "7", "8", "9", "Jack", "Queen", "King"};
+    public static int[] points = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10};
 
     public Game() {
         // Setting player 1
@@ -14,10 +17,6 @@ public class Game {
         // Initialize players
         this.player1 = new Player(namePlayer1);
         this.dealer = new Player("Dealer");
-        // Make arrays for deck
-        String[] suit = {"Hearts", "Diamonds", "Clubs", "Spades"};
-        String[] rank = {"Ace", "2", "3", "4", "5", "6", "7", "8", "9", "Jack", "Queen", "King"};
-        int[] points = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10};
         // Initialize deck
         deck = new Deck(rank, suit, points);
     }
@@ -43,11 +42,12 @@ public class Game {
 
         while (continueGame)
         {
-            // reset variables
+            // Reset variables
             player1.resetHand();
             dealer.resetHand();
             continueToDealer = true;
-            continueGame = true;
+            deck.shuffle();
+
             // player's turn
             while (playerSum < 22) {
                 System.out.println(player1.getName() + " do you want to hit (h) or stay (s) if you want to quit" +
@@ -64,7 +64,7 @@ public class Game {
                     // check if bust or blackjack
                     if (sum == 21) {
                         System.out.println("Blackjack! You won");
-                        continueGame = false;
+                        continueToDealer = false;
                         break;
                     }
                     else if (sum > 21) {
@@ -77,7 +77,8 @@ public class Game {
                 else if (decision.equals("s")) {
                     break;
                 }
-                else {
+                // exit if they want to
+                else if (decision.equals("e")){
                     continueToDealer = false;
                     continueGame = false;
                     break;
@@ -115,7 +116,7 @@ public class Game {
                 else if (sum < sumDealer && sumDealer < 22) {
                     System.out.println("You lost!");
                 }
-                else if (sum == sumDealer){
+                else if (sum == sumDealer || !(sum>21)){
                     System.out.println("You tied!");
                 }
             }
@@ -141,7 +142,9 @@ public class Game {
 
     // Main Function
     public static void main(String[] args) {
+        // print the instructions
         printInstructions();
+        // new game class
         Game play = new Game();
         playGame();
 
