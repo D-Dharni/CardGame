@@ -1,9 +1,11 @@
 import java.util.ArrayList;
 
+// Deven Dharni
+
 public class Player {
     // Instance Variables
     private String name;
-    private ArrayList<Card> hand = new ArrayList<Card>();
+    private ArrayList<Card> hand;
     private int points;
 
 
@@ -11,6 +13,7 @@ public class Player {
     public Player(String name) {
         this.name = name;
         this.points = 0;
+        this.hand = new ArrayList<Card>();
     }
 
     public Player(String name, ArrayList<Card> hand) {
@@ -45,7 +48,7 @@ public class Player {
     public void resetHand() {
         hand.clear();
     }
-    // toString Method
+    // ToString Method
     public String toString() {
         return this.name + " has " + this.points + "\n" + this.name + "'s cards: " + this.hand;
     }

@@ -1,13 +1,15 @@
 import java.util.Scanner;
 import java.util.ArrayList;
 
+// Deven Dharni
+
 public class Game {
-    public static Player player1;
-    public static Player dealer;
-    public static Deck deck;
-    public static String[] suit = {"Hearts", "Diamonds", "Clubs", "Spades"};
-    public static String[] rank = {"Ace", "2", "3", "4", "5", "6", "7", "8", "9", "Jack", "Queen", "King"};
-    public static int[] points = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10};
+    private Player player1;
+    private Player dealer;
+    private Deck deck;
+    private final String[] suit = {"Hearts", "Diamonds", "Clubs", "Spades"};
+    private final String[] rank = {"Ace", "2", "3", "4", "5", "6", "7", "8", "9", "Jack", "Queen", "King"};
+    private final int[] points = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10};
 
     public Game() {
         // Setting player 1
@@ -28,7 +30,7 @@ public class Game {
                 "Cards 2-10 are worth their face value, face cards count as 10,\nand Aces count as 1.\n\n");
     }
     // Play Game Function
-    public static void playGame() {
+    public void playGame() {
         // Variables for sums
         int playerSum = 0;
         int dealerSum = 0;
@@ -48,20 +50,20 @@ public class Game {
             continueToDealer = true;
             deck.shuffle();
 
-            // player's turn
+            // Player's turn
             while (playerSum < 22) {
                 System.out.println(player1.getName() + " do you want to hit (h) or stay (s) if you want to quit" +
                         " playing say exit (e)");
                 decision = input.nextLine();
-                // if they hit
+                // If they hit
                 if (decision.equals("h")) {
-                    // add a card to their thing
+                    // Add a card to their thing
                     player1.addCard(deck.deal());
-                    // print out hand for them
+                    // Print out hand for them
                     sum = sum(player1.getHand());
                     System.out.println("Here is the sum of your hand: \n" + sum + "\n");
 
-                    // check if bust or blackjack
+                    // Check if bust or blackjack
                     if (sum == 21) {
                         System.out.println("Blackjack! You won");
                         continueToDealer = false;
@@ -73,11 +75,11 @@ public class Game {
                         break;
                     }
                 }
-                // if they stay change the turn
+                // If they stay change the turn
                 else if (decision.equals("s")) {
                     break;
                 }
-                // exit if they want to
+                // Exit if they want to
                 else if (decision.equals("e")){
                     continueToDealer = false;
                     continueGame = false;
@@ -85,22 +87,22 @@ public class Game {
                 }
             }
 
-            // print out change in turn
+            // Print out change in turn
             if (continueGame == true && continueToDealer == true) {
                 System.out.println("Dealer's turn");
             }
-            // dealers hand
+            // Dealers hand
             if (continueToDealer) {
                 while(sum(dealer.getHand()) < 18) {
                     dealer.addCard(deck.deal());
                     sumDealer = sum(dealer.getHand());
                     System.out.println("Dealer's sum: " + sumDealer + "\n");
-                    // check if blackjack
+                    // Check if blackjack
                     if (sumDealer == 21) {
                         System.out.println("Blackjack! You lost");
                         break;
                     }
-                    // if over 21
+                    // If over 21
                     if (sumDealer > 21 ) {
                         System.out.println("Dealer busted. You won!");
                         break;
@@ -109,44 +111,48 @@ public class Game {
             }
 
             if (continueGame) {
-                // find out who won
-                if (sum > sumDealer && sum < 22) {
-                    System.out.println("You won!");
-                }
-                else if (sum < sumDealer && sumDealer < 22) {
-                    System.out.println("You lost!");
-                }
-                else if (sum == sumDealer || !(sum>21)){
-                    System.out.println("You tied!");
-                }
+                // Find out who won
+                findWinner(sum, sumDealer);
             }
 
         }
     }
 
-    public static int sum (ArrayList<Card> arr) {
-        // variable to return and for getting array of points
+    public void findWinner (int sum, int sumDealer) {
+        if (sum > sumDealer && sum < 22) {
+            System.out.println("You won!");
+        }
+        else if (sum < sumDealer && sumDealer < 22) {
+            System.out.println("You lost!");
+        }
+        else if (sum == sumDealer || !(sum>21)){
+            System.out.println("You tied!");
+        }
+    }
+
+    public int sum (ArrayList<Card> arr) {
+        // Variable to return and for getting array of points
         int sum = 0;
         int[] arrOfValues = new int[arr.size()];
-        // add points to array of points
+        // Add points to array of points
         for (int i = 0; i < arr.size(); i++) {
             arrOfValues[i] = arr.get(i).getValue();
         }
-        // add points to the sum
+        // Add points to the sum
         for (int number: arrOfValues) {
             sum += number;
         }
-        // return the value
+        // Return the value
         return sum;
     }
 
     // Main Function
     public static void main(String[] args) {
-        // print the instructions
+        // Print the instructions
         printInstructions();
-        // new game class
+        // New game class
         Game play = new Game();
-        playGame();
+        play.playGame();
 
     }
 }

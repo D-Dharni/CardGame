@@ -1,3 +1,7 @@
+// Deven Dharni
+
+// Card class that will take care of its ranks, suit, and value
+
 public class Card {
     // Instance Variables
     private String rank;
