@@ -1,36 +1,50 @@
 import java.util.Scanner;
 import java.util.ArrayList;
+import javax.swing.*;
 
 // Deven Dharni
 
 public class Game {
+    // Players
     private Player player1;
     private Player dealer;
+
+    // Deck
     private Deck deck;
+
+    // All attributes for cards
     private final String[] suit = {"Hearts", "Diamonds", "Clubs", "Spades"};
     private final String[] rank = {"Ace", "2", "3", "4", "5", "6", "7", "8", "9", "Jack", "Queen", "King"};
     private final int[] points = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10};
 
+    // State of game
+    public String state = "instructions";
+
+    // Window object
+    private GameViewer window;
+
+
     public Game() {
+        // Set window
+        window = new GameViewer(this);
+
         // Setting player 1
         Scanner input = new Scanner(System.in);
-        System.out.println("What's your name?");
+        System.out.println("Enter your name to begin:");
         String namePlayer1 = input.nextLine();
+
         // Initialize players
         this.player1 = new Player(namePlayer1);
         this.dealer = new Player("Dealer");
+
         // Initialize deck
         deck = new Deck(rank, suit, points);
-    }
-    // Instructions
-    public static void printInstructions() {
-        System.out.println("Blackjack is a card game where the goal is to have a hand value closer to 21 than the " +
-                "dealer without exceeding 21.\nPlayers are dealt two cards and can \"hit\" to take additional " +
-                "cards or \"stand\" to keep their current total,\naiming to maximize their score without going over. " +
-                "Cards 2-10 are worth their face value, face cards count as 10,\nand Aces count as 1.\n\n");
+
+        state = "game";
     }
     // Play Game Function
     public void playGame() {
+
         // Variables for sums
         int playerSum = 0;
         int dealerSum = 0;
@@ -44,6 +58,7 @@ public class Game {
 
         while (continueGame)
         {
+            window.repaint();
             // Reset variables
             player1.resetHand();
             dealer.resetHand();
@@ -148,10 +163,10 @@ public class Game {
 
     // Main Function
     public static void main(String[] args) {
-        // Print the instructions
-        printInstructions();
         // New game class
         Game play = new Game();
+
+        // Run
         play.playGame();
 
     }
