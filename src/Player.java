@@ -22,7 +22,12 @@ public class Player {
         this.points = 0;
     }
 
-
+    public Card getLastCard () {
+        if (hand.size() == 0) {
+            return null;
+        }
+        return this.hand.get(hand.size() - 1);
+    }
     // Getter Methods
     public String getName() {
         return name;

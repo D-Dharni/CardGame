@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.ArrayList;
 
 // Deven Dharni
@@ -11,16 +12,28 @@ public class Deck {
     public Deck(String[] rank, String[] suits, int[] points) {
         // Create the deck by making a card for each suit
         this.deck = new ArrayList<Card>();
-        for (String suit: suits) {
-            for (int i = 0; i < rank.length; i++) {
-                Card added = new Card(rank[i], suit, points[i]);
+        // For the png
+        int increment = 1;
+        // For the value
+        int point = 0;
+        // Loop through ranks then suits
+        for (String ranks: rank) {
+            for (int i = 0; i < suits.length; i++) {
+                // Put the string
+                String fileName = "Resources/Cards/";
+                // Make the card
+                Card added = new Card(ranks, suits[i], points[point], new ImageIcon(fileName + increment + ".png").getImage());
+                // Add to the deck increment the png
                 deck.add(added);
+                increment += 1;
             }
+            // Increment the point
+            point += 1;
         }
-        // Initialize the card size
-        cardsLeft = deck.size();
         // Shuffle the deck
         this.shuffle();
+        // Initialize the card size
+        cardsLeft = deck.size();
     }
 
     // Check if deck is empty

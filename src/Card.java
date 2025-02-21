@@ -2,17 +2,22 @@
 
 // Card class that will take care of its ranks, suit, and value
 
+import javax.swing.*;
+import java.awt.*;
+
 public class Card {
     // Instance Variables
     private String rank;
     private String suit;
     private int value;
+    private Image image;
 
     // Constructor
-    public Card(String rank, String suit, int value) {
+    public Card(String rank, String suit, int value, Image image) {
         this.rank = rank;
         this.suit = suit;
         this.value = value;
+        this.image = image;
     }
 
     // Getter Methods
@@ -42,6 +47,9 @@ public class Card {
         this.value = value;
     }
 
+    public Image getImage() {
+        return image;
+    }
 
     // To String Function
     public String toString()

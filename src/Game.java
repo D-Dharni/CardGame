@@ -13,16 +13,16 @@ public class Game {
     private Deck deck;
 
     // All attributes for cards
-    private final String[] suit = {"Hearts", "Diamonds", "Clubs", "Spades"};
+    private final String[] suit = {"Spades", "Hearts", "Diamonds", "Clubs"};
     private final String[] rank = {"Ace", "2", "3", "4", "5", "6", "7", "8", "9", "Jack", "Queen", "King"};
     private final int[] points = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10};
 
     // State of game
-    public String state = "instructions";
+    private String state = "instructions";
 
     // Window object
     private GameViewer window;
-
+    private int sum;
 
     public Game() {
         // Set window
@@ -41,6 +41,7 @@ public class Game {
         deck = new Deck(rank, suit, points);
 
         state = "game";
+        this.sum = 0;
     }
     // Play Game Function
     public void playGame() {
@@ -53,12 +54,10 @@ public class Game {
         boolean continueToDealer = true;
         boolean continueGame = true;
         int sumDealer = 0;
-        int sum = 0;
 
 
         while (continueGame)
         {
-            window.repaint();
             // Reset variables
             player1.resetHand();
             dealer.resetHand();
@@ -77,21 +76,27 @@ public class Game {
                     // Print out hand for them
                     sum = sum(player1.getHand());
                     System.out.println("Here is the sum of your hand: \n" + sum + "\n");
-
+                    state = "game";
                     // Check if bust or blackjack
                     if (sum == 21) {
+                        state = "player";
+                        window.repaint();
                         System.out.println("Blackjack! You won");
                         continueToDealer = false;
                         break;
                     }
                     else if (sum > 21) {
+                        state = "dealer";
+                        window.repaint();
                         System.out.println("You busted");
                         continueToDealer = false;
                         break;
                     }
+                    window.repaint();
                 }
                 // If they stay change the turn
                 else if (decision.equals("s")) {
+                    window.repaint();
                     break;
                 }
                 // Exit if they want to
@@ -114,11 +119,15 @@ public class Game {
                     System.out.println("Dealer's sum: " + sumDealer + "\n");
                     // Check if blackjack
                     if (sumDealer == 21) {
+                        state = "dealer";
+                        window.repaint();
                         System.out.println("Blackjack! You lost");
                         break;
                     }
                     // If over 21
                     if (sumDealer > 21 ) {
+                        state = "player";
+                        window.repaint();
                         System.out.println("Dealer busted. You won!");
                         break;
                     }
@@ -133,14 +142,28 @@ public class Game {
         }
     }
 
+    public int getSum() {
+        return sum;
+    }
+
+    public String getState() {
+        return state;
+    }
+
     public void findWinner (int sum, int sumDealer) {
         if (sum > sumDealer && sum < 22) {
+            state = "player";
+            window.repaint();
             System.out.println("You won!");
         }
         else if (sum < sumDealer && sumDealer < 22) {
+            state = "dealer";
+            window.repaint();
             System.out.println("You lost!");
         }
-        else if (sum == sumDealer || !(sum>21)){
+        else if (sum == sumDealer && sumDealer<21){
+            state = "tie";
+            window.repaint();
             System.out.println("You tied!");
         }
     }
@@ -159,6 +182,10 @@ public class Game {
         }
         // Return the value
         return sum;
+    }
+
+    public Player getPlayer1() {
+        return player1;
     }
 
     // Main Function
