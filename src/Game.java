@@ -25,6 +25,7 @@ public class Game {
     private GameViewer window;
     private int sum;
     private int sumDealer;
+    private boolean continueGame;
 
     public Game() {
         // Set window
@@ -43,6 +44,7 @@ public class Game {
         deck = new Deck(rank, suit, points);
 
         continueToDealer = true;
+        continueGame = true;
 
         state = "game";
         this.sum = 0;
@@ -52,7 +54,6 @@ public class Game {
     public void playGame() {
         Scanner input = new Scanner(System.in);
         String decision = "";
-        boolean continueGame = true;
 
 
         while (continueGame)
@@ -141,6 +142,10 @@ public class Game {
                 window.repaint();
                 System.out.println("Blackjack! You won");
                 continueToDealer = false;
+
+                // Reset
+                player1.resetHand();
+                dealer.resetHand();
             }
             // Check if over
             else if (sum > 21) {

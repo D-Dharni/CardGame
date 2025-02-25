@@ -2,6 +2,11 @@
 
 // Card class that will take care of its ranks, suit, and value
 
+//What data does the back-end manage? What data is shared with the front-end?
+//How is everything constructed and initialized — and in what order? Why did you choose to initialize everything in that order?
+//How do the back-end and front-end interact?
+
+
 import java.awt.*;
 
 public class Card {

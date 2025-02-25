@@ -28,8 +28,6 @@ public class GameViewer extends JFrame {
         this.setTitle("BlackJack");
         this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         this.setVisible(true);
-
-
     }
 
     public void paint(Graphics g) {
