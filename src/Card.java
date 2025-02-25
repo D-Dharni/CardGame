@@ -2,7 +2,6 @@
 
 // Card class that will take care of its ranks, suit, and value
 
-import javax.swing.*;
 import java.awt.*;
 
 public class Card {

@@ -1,6 +1,5 @@
 import java.util.Scanner;
 import java.util.ArrayList;
-import javax.swing.*;
 
 // Deven Dharni
 
@@ -17,12 +16,15 @@ public class Game {
     private final String[] rank = {"Ace", "2", "3", "4", "5", "6", "7", "8", "9", "Jack", "Queen", "King"};
     private final int[] points = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10};
 
+    private boolean continueToDealer;
+
     // State of game
     private String state = "instructions";
 
     // Window object
     private GameViewer window;
     private int sum;
+    private int sumDealer;
 
     public Game() {
         // Set window
@@ -40,20 +42,17 @@ public class Game {
         // Initialize deck
         deck = new Deck(rank, suit, points);
 
+        continueToDealer = true;
+
         state = "game";
         this.sum = 0;
+        this.sumDealer = 0;
     }
     // Play Game Function
     public void playGame() {
-
-        // Variables for sums
-        int playerSum = 0;
-        int dealerSum = 0;
         Scanner input = new Scanner(System.in);
         String decision = "";
-        boolean continueToDealer = true;
         boolean continueGame = true;
-        int sumDealer = 0;
 
 
         while (continueGame)
@@ -63,9 +62,11 @@ public class Game {
             dealer.resetHand();
             continueToDealer = true;
             deck.shuffle();
+            sum = 0;
+            sumDealer = 0;
 
             // Player's turn
-            while (playerSum < 22) {
+            while (sum < 22) {
                 System.out.println(player1.getName() + " do you want to hit (h) or stay (s) if you want to quit" +
                         " playing say exit (e)");
                 decision = input.nextLine();
@@ -76,22 +77,9 @@ public class Game {
                     // Print out hand for them
                     sum = sum(player1.getHand());
                     System.out.println("Here is the sum of your hand: \n" + sum + "\n");
+                    // Change state and update screen
                     state = "game";
-                    // Check if bust or blackjack
-                    if (sum == 21) {
-                        state = "player";
-                        window.repaint();
-                        System.out.println("Blackjack! You won");
-                        continueToDealer = false;
-                        break;
-                    }
-                    else if (sum > 21) {
-                        state = "dealer";
-                        window.repaint();
-                        System.out.println("You busted");
-                        continueToDealer = false;
-                        break;
-                    }
+                    checkWin(sum, 0);
                     window.repaint();
                 }
                 // If they stay change the turn
@@ -108,29 +96,19 @@ public class Game {
             }
 
             // Print out change in turn
-            if (continueGame == true && continueToDealer == true) {
+            if ((continueGame) && (continueToDealer)) {
                 System.out.println("Dealer's turn");
             }
             // Dealers hand
             if (continueToDealer) {
+                // Run while below 18
                 while(sum(dealer.getHand()) < 18) {
+                    // Add card and get hand
                     dealer.addCard(deck.deal());
                     sumDealer = sum(dealer.getHand());
+                    // Print
                     System.out.println("Dealer's sum: " + sumDealer + "\n");
-                    // Check if blackjack
-                    if (sumDealer == 21) {
-                        state = "dealer";
-                        window.repaint();
-                        System.out.println("Blackjack! You lost");
-                        break;
-                    }
-                    // If over 21
-                    if (sumDealer > 21 ) {
-                        state = "player";
-                        window.repaint();
-                        System.out.println("Dealer busted. You won!");
-                        break;
-                    }
+                    checkWin(sumDealer, 1);
                 }
             }
 
@@ -138,7 +116,39 @@ public class Game {
                 // Find out who won
                 findWinner(sum, sumDealer);
             }
+        }
+    }
 
+    public void checkWin (int sum, int type) {
+        if (type == 1) {
+            // Check if blackjack
+            if (sum == 21) {
+                state = "dealer";
+                window.repaint();
+                System.out.println("Blackjack! You lost");
+            }
+            // If over 21
+            if (sum > 21 ) {
+                state = "player";
+                window.repaint();
+                System.out.println("Dealer busted. You won!");
+            }
+        }
+        else {
+            // Check if bust or blackjack
+            if (sum == 21) {
+                state = "player";
+                window.repaint();
+                System.out.println("Blackjack! You won");
+                continueToDealer = false;
+            }
+            // Check if over
+            else if (sum > 21) {
+                state = "dealer";
+                window.repaint();
+                System.out.println("You busted");
+                continueToDealer = false;
+            }
         }
     }
 
@@ -151,16 +161,19 @@ public class Game {
     }
 
     public void findWinner (int sum, int sumDealer) {
+        // If player won
         if (sum > sumDealer && sum < 22) {
             state = "player";
             window.repaint();
             System.out.println("You won!");
         }
+        // If dealer won
         else if (sum < sumDealer && sumDealer < 22) {
             state = "dealer";
             window.repaint();
             System.out.println("You lost!");
         }
+        // If tie
         else if (sum == sumDealer && sumDealer<21){
             state = "tie";
             window.repaint();
